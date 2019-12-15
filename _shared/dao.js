@@ -19,7 +19,7 @@ class DAO {
     }
 
     var persistence = this.config.persistence
-    this.data_file = `.github/${process.env.DATA_FILE}`
+    this.data_file = `.github/${persistence.file}`
     this.data_branch = persistence.branch || "master"
 
     this.inited = true
