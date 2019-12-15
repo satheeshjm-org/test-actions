@@ -13,7 +13,7 @@ async function run() {
     //shared libraries were implemented for probot, so this is needed for compatibility
     const github_cli = new github.GitHub(process.env.GITHUB_TOKEN)
     context.github = github_cli
-    context.config = function () {
+    context.config = async function () {
       return process.env.CONFIG
     }
 
