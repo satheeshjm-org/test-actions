@@ -31,8 +31,6 @@ async function run() {
       }
     })
 
-    console.log(context.repo)
-
     const FreezeCommand = require("./commands/freeze_branch.js")
     const freezeCommand = new FreezeCommand(probot_context)
     await (new Commander(freezeCommand).execute())

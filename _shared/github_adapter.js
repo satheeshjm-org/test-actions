@@ -29,7 +29,7 @@ async function update_status_of_all_pull_requests(context, args) {
   prs.forEach( async pr => {
 
     logger.info(`${log_prefix} Creating status ${state} for pr ${pr.number}`)
-    await github_cli.repos.createStatus(
+    var resp = await github_cli.repos.createStatus(
       context.repo({
         state: state,
         description: message,
@@ -37,6 +37,8 @@ async function update_status_of_all_pull_requests(context, args) {
         context: process.env.DISPLAY_NAME
       })
     );
+    console.log(github_cli.repos)
+    console.table(resp)
     logger.info(`${log_prefix} Created status ${state} for pr ${pr.number}`);
   })
 }
