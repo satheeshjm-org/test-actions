@@ -28,7 +28,7 @@ async function update_status_of_all_pull_requests(context, args) {
   //Update status for each PR
   prs.forEach( async pr => {
 
-    logger.info(`${log_prefix} Creating status ${state} for pr ${pr.number}`)
+    logger.info(`${log_prefix} Creating status ${state} for pr ${pr.number}:${pr.head.sha}`)
     var resp = await github_cli.repos.createStatus(
       context.repo({
         state: state,
@@ -39,7 +39,7 @@ async function update_status_of_all_pull_requests(context, args) {
     );
     console.log(github_cli.repos)
     console.log(JSON.stringify(resp, null, 2))
-    logger.info(`${log_prefix} Created status ${state} for pr ${pr.number}`);
+    logger.info(`${log_prefix} Created status ${state} for pr ${pr.number}:${pr.head.sha}`);
   })
 }
 
