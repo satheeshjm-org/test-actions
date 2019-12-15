@@ -16,7 +16,7 @@ class Commander {
     this.inited = true
   }
 
-  async execute(callback) {
+  async execute() {
 
     if (!this.inited) {
       await this.init()
@@ -121,30 +121,28 @@ class Commander {
     await this.command.handler(args)
     return
   }
+
+  /**
+   * @param app
+   * @param command -
+   */
+  static on(app, Command) {
+    app.on(
+      ["issue_comment.created"],
+
+      async context => {
+        //set log_prefix
+        var payload = context.payload
+        var payload_issue = payload.issue
+        var log_prefix = `#${payload_issue.number}: `
+        context.log_prefix = log_prefix
+
+        var command = new Command(context)
+        await (new Commander(command).execute())
+      }
+    )
+  }
 }
 
-/**
- *
- * @param app
- * @param command -
- */
-var on = function(app, Command) {
-  app.on(
-    ["issue_comment.created"],
+module.exports = Commander
 
-    async context => {
-      //set log_prefix
-      var payload = context.payload
-      var payload_issue = payload.issue
-      var log_prefix = `#${payload_issue.number}: `
-      context.log_prefix = log_prefix
-
-      var command = new Command(context)
-      await (new Commander(command).execute())
-    }
-  )
-}
-
-module.exports = {
-  on : on
-}
