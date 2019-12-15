@@ -15,11 +15,11 @@ async function run() {
 
     const FreezeCommand = require("./commands/freeze_branch.js")
     const freezeCommand = new FreezeCommand(context)
-    await (new Commander.Commander(freezeCommand).execute())
+    await (new Commander(freezeCommand).execute())
 
     var UnfreezeCommand = require("./commands/unfreeze_branch.js")
     var unfreezeCommand = new UnfreezeCommand(context)
-    await (new Commander.Commander(unfreezeCommand).execute())
+    await (new Commander(unfreezeCommand).execute())
   }
   catch (e) {
     core.setFailed(e.message);
