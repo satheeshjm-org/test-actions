@@ -1,9 +1,9 @@
 
 
-const Command = require ("../../../../_shared/command")
-const Freezer = require ("../../../../_shared/freezer")
-const config_helper = require ("../../../../_shared/config_helper")
-const github_adapter = require ("../../../../_shared/github_adapter")
+const Command = require ("../../../_shared/command")
+const Freezer = require ("../../../_shared/freezer")
+const config_helper = require ("../../../_shared/config_helper")
+const github_adapter = require ("../../../_shared/github_adapter")
 
 
 

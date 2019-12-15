@@ -1,7 +1,7 @@
 
 const core = require('@actions/core');
 const github = require('@actions/github');
-var Commander = require ("../../../_shared/commander")
+var Commander = require ("../../_shared/commander")
 
 
 async function run() {
