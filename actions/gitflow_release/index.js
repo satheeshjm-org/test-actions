@@ -14,6 +14,7 @@ async function run() {
 
     var staging_branch = core.getInput('staging_branch')
     var production_branch = core.getInput('production_branch')
+    var releasetag_regex = core.getInput('releasetag_regex')
 
 
     var payload_pr = payload.pull_request
@@ -46,6 +47,8 @@ async function run() {
 
     //calculate tag
     const pr_title = payload_pr.title //title will be of the format Release: x.x.x.x
+    var title_regex = new RegExp(`Release:(${releasetag_regex})$`)
+    const regex_match = pr_title.match(title_regex)
     const regex_match = pr_title.match(/^Release:((\d+\.){3}\d+)$/m) //todo: move this to inputs
     if(!regex_match) {
       throw new Error(`Invalid Title. Expected format "Release:x.x.x.x" Actual value ${pr_title} `)
