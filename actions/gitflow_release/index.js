@@ -82,7 +82,7 @@ async function run() {
         repo: repo.repo,
         tag_name: release_tag,
         name: payload_pr.title,
-        body: payload_pr.body,
+        body: release_body,
         draft: false,
         prerelease: false,
         target_commitish: production_branch
