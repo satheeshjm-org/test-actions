@@ -8,6 +8,9 @@ async function run() {
 
   try {
 
+    const context = github.context
+    const repo = context.repo
+
     //shared libraries were implemented for probot, so this is needed for compatibility
     var action_context = {
       log : console,
@@ -22,7 +25,7 @@ async function run() {
         }
       }
     }
-    const context = new Proxy(action_context, {
+    const probot_context = new Proxy(action_context, {
       get: (obj, prop) => {
         return prop in obj? obj[prop]: github.context[prop]
       }
@@ -31,11 +34,11 @@ async function run() {
     console.log(context.repo)
 
     const FreezeCommand = require("./commands/freeze_branch.js")
-    const freezeCommand = new FreezeCommand(context)
+    const freezeCommand = new FreezeCommand(probot_context)
     await (new Commander(freezeCommand).execute())
 
     var UnfreezeCommand = require("./commands/unfreeze_branch.js")
-    var unfreezeCommand = new UnfreezeCommand(context)
+    var unfreezeCommand = new UnfreezeCommand(probot_context)
     await (new Commander(unfreezeCommand).execute())
   }
   catch (e) {
