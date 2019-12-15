@@ -15,6 +15,13 @@ async function run() {
     context.config = async function () {
       return JSON.parse(process.env.CONFIG)
     }
+    var repo = context.repo
+    context.repo = function(args) {
+      return {
+        ...{ owner : repo.owner,repo : repo.repo },
+        ...args
+      }
+    }
 
     const FreezeCommand = require("./commands/freeze_branch.js")
     const freezeCommand = new FreezeCommand(context)
