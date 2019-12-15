@@ -12,7 +12,7 @@ async function run() {
     const repo = context.repo
 
     //shared libraries were implemented for probot, so this is needed for compatibility
-    var probot_context = {
+    var context_wrapper = {
       log : console,
       github : new github.GitHub(process.env.GITHUB_TOKEN),
       config : async function () {
@@ -25,11 +25,11 @@ async function run() {
         }
       }
     }
-    // const probot_context = new Proxy(action_context, {
-    //   get: (obj, prop) => {
-    //     return prop in obj? obj[prop]: github.context[prop]
-    //   }
-    // })
+    const probot_context = new Proxy(context_wrapper, {
+      get: (obj, prop) => {
+        return prop in obj? obj[prop]: github.context[prop]
+      }
+    })
 
     console.log(context.repo)
 
