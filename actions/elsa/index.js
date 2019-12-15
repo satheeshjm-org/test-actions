@@ -13,7 +13,7 @@ async function run() {
     context.log = console
     context.github =  new github.GitHub(process.env.GITHUB_TOKEN)
     context.config = async function () {
-      return process.env.CONFIG
+      return JSON.parse(process.env.CONFIG)
     }
 
     const FreezeCommand = require("./commands/freeze_branch.js")
