@@ -1,0 +1,5 @@
+name: 'Gitflow Stage'
+description: 'Gitflow Stage'
+runs:
+  using: node12
+  main: index.js

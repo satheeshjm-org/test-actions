@@ -1,0 +1,5 @@
+name: 'Gitflow Releas'
+description: 'Gitflow Release '
+runs:
+  using: node12
+  main: index.js
