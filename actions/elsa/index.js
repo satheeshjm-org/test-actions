@@ -22,6 +22,10 @@ async function run() {
         ...args
       }
     }
+    console.log(context.log)
+    console.log(context.github)
+    console.log(context.config)
+    console.log(context.repo)
 
     const FreezeCommand = require("./commands/freeze_branch.js")
     const freezeCommand = new FreezeCommand(context)
