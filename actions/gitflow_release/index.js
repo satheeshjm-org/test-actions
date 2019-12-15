@@ -49,8 +49,6 @@ async function run() {
     const pr_title = payload_pr.title //title will be of the format Release: x.x.x.x
     var title_regex = new RegExp(`Release:(${releasetag_regex})$`)
     const regex_match = pr_title.match(title_regex)
-    console.info(title_regex)
-    console.table(regex_match)
     if(!regex_match) {
       throw new Error(`Invalid Title. Expected format "Release:x.x.x.x" Actual value ${pr_title} `)
     }
