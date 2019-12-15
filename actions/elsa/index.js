@@ -7,24 +7,27 @@ var Commander = require ("../../_shared/commander")
 async function run() {
 
   try {
-    const context = github.context
 
     //shared libraries were implemented for probot, so this is needed for compatibility
-    context.log = console
-    context.github =  new github.GitHub(process.env.GITHUB_TOKEN)
-    context.config = async function () {
-      return JSON.parse(process.env.CONFIG)
-    }
-    var repo = context.repo
-    context.repo = function(args) {
-      return {
-        ...{ owner : repo.owner,repo : repo.repo },
-        ...args
+    var action_context = {
+      log : console,
+      github : new github.GitHub(process.env.GITHUB_TOKEN),
+      config : async function () {
+        return JSON.parse(process.env.CONFIG)
+      },
+      repo : function(args) {
+        return {
+          ...{ owner : repo.owner,repo : repo.repo },
+          ...args
+        }
       }
     }
-    console.log(context.log)
-    console.log(context.github)
-    console.log(context.config)
+    const context = new Proxy(action_context, {
+      get: (obj, prop) => {
+        return prop in obj? obj[prop]: github.context[prop]
+      }
+    })
+
     console.log(context.repo)
 
     const FreezeCommand = require("./commands/freeze_branch.js")
