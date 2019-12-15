@@ -38,7 +38,7 @@ async function update_status_of_all_pull_requests(context, args) {
       })
     );
     console.log(github_cli.repos)
-    console.table(resp)
+    console.log(JSON.stringify(resp, null, 2))
     logger.info(`${log_prefix} Created status ${state} for pr ${pr.number}`);
   })
 }
