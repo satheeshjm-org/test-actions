@@ -1,5 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const parse_diff = require('parse-diff');
+
 async function run() {
 
   try {
@@ -10,6 +12,9 @@ async function run() {
 
     var staging_branch = core.getInput('staging_branch')
     var production_branch = core.getInput('production_branch')
+    var body_config = JSON.parse(core.getInput('pr_body') || '{}')
+
+    var table_fields = body_config.table_fields || []
 
     const payload = context.payload
     var repo = context.repo
@@ -37,10 +42,58 @@ async function run() {
       return
     }
 
+
     var base = production_branch //pull from config
     var head = payload_pr.base.ref
     var log_prefix = `${head}->${base}`
-    var pr_body = `${payload_pr.title}(#${payload_pr.number})`
+
+
+    var titles = []
+    var current_pr_entry = []
+    for (var i=0;i<table_fields.length;i++) {
+      var table_field = table_fields[i]
+
+      var name = table_field.name
+      titles.push(name)
+
+      var value = table_field.value
+      if (value == "pr") {
+        current_pr_entry.push(`${payload_pr.title}(#${payload_pr.number})`)
+      }
+      else if (value == "owner") {
+        current_pr_entry.push(payload_pr.user.login)
+      }
+      else if (value == "file_extension_bool") {
+        var extension_to_match = table_field.extension
+
+
+        //get diff
+        var prget_resp = github_cli.pullRequests.get({
+          owner: repo.owner,
+          repo: repo.repo,
+          number: payload_pr.number,
+          headers: {accept: "application/vnd.github.v3.diff"}
+        });
+
+
+        var diffs = parse_diff(prget_resp)
+        var diff_files = diffs.map(d => d.to)
+        console.log(diff_files)
+        var diff_file_extensions = new Set(diff_files.map(f => f.split('.').pop()))
+        console.log(diff_file_extensions)
+
+        if (extension_to_match in diff_file_extensions) {
+          current_pr_entry.push("yes")
+        }
+        else {
+          current_pr_entry.push("no")
+        }
+      }
+    }
+
+
+    var pr_body = `|${current_pr_entry.join("|")}|`
+
 
     try {
       console.debug(`${log_prefix} Fetching pull request`)
@@ -56,6 +109,7 @@ async function run() {
       if (prs.length == 0) {
         console.info(`${log_prefix} Pull request not found. So creating one`)
 
+        pr_body = `|${titles.join("|")}|\n${pr_body}`
         var prcreate_resp = await github_cli.pulls.create({
           owner: repo.owner,
           repo: repo.repo,
