@@ -14,9 +14,6 @@ async function run() {
     var production_branch = core.getInput('production_branch')
     var body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
 
-    console.table(core.getInput('pr_body_config'))
-    console.table(core.getInput('pr_body_config') )
-
     var table_fields = body_config.table_fields || []
 
     const payload = context.payload
@@ -75,12 +72,12 @@ async function run() {
         var prget_resp = github_cli.pullRequests.get({
           owner: repo.owner,
           repo: repo.repo,
-          number: payload_pr.number,
+          pull_number: payload_pr.number,
           headers: {accept: "application/vnd.github.v3.diff"}
         });
 
 
-        var diffs = parse_diff(prget_resp)
+        var diffs = parse_diff(prget_resp.data)
         var diff_files = diffs.map(d => d.to)
         console.log(diff_files)
         var diff_file_extensions = new Set(diff_files.map(f => f.split('.').pop()))
