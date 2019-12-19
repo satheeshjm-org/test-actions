@@ -78,6 +78,7 @@ async function run() {
         });
 
 
+        console.table(prget_resp.data)
         var diffs = parse_diff(prget_resp.data)
         var diff_files = diffs.map(d => d.to)
         console.log(diff_files)
