@@ -70,7 +70,7 @@ async function run() {
 
 
         //get diff
-        var prget_resp = github_cli.pullRequests.get({
+        var prget_resp = await github_cli.pullRequests.get({
           owner: repo.owner,
           repo: repo.repo,
           pull_number: payload_pr.number,
