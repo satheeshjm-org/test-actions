@@ -77,18 +77,18 @@ async function run() {
           headers: {accept: "application/vnd.github.v3.diff"}
         });
 
-        console.table(prget_resp)
-        console.log(prget_resp.data)
         var diffs = parse_diff(prget_resp.data)
         var diff_files = diffs.map(d => d.to)
-        console.log(diff_files)
         var diff_file_extensions = new Set(diff_files.map(f => f.split('.').pop()))
-        console.log(diff_file_extensions)
 
-        if (extension_to_match in diff_file_extensions) {
+        console.log(`File Extensions found in PR ${diff_file_extensions}`)
+
+        if (diff_file_extensions.has(extension_to_match)) {
+          console.debug(`extension ${extension_to_match} found in PR diff`)
           current_pr_entry.push("yes")
         }
         else {
+          console.debug(`extension ${extension_to_match} not found in PR diff`)
           current_pr_entry.push("no")
         }
       }
