@@ -49,13 +49,14 @@ async function run() {
 
 
     var titles = []
+    var horizontal_linesegments = []
     var current_pr_entry = []
     for (var i=0;i<table_fields.length;i++) {
       var table_field = table_fields[i]
 
-      console.table(table_field)
       var name = table_field.name
       titles.push(name)
+      horizontal_linesegments.push("---")
 
       var value = table_field.value
       if (value == "pr") {
@@ -93,7 +94,7 @@ async function run() {
     }
 
 
-    var pr_body = `|${current_pr_entry.join("|")}|`
+    var pr_body = `| ${current_pr_entry.join(" | ")} |`
 
 
     try {
@@ -110,7 +111,8 @@ async function run() {
       if (prs.length == 0) {
         console.info(`${log_prefix} Pull request not found. So creating one`)
 
-        pr_body = `|${titles.join("|")}|\n${pr_body}`
+        pr_body = `| ${horizontal_linesegments.join(" | ")} |\n${pr_body}`
+        pr_body = `| ${titles.join(" | ")} |\n${pr_body}`
         var prcreate_resp = await github_cli.pulls.create({
           owner: repo.owner,
           repo: repo.repo,
