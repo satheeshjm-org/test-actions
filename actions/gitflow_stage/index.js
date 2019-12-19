@@ -13,7 +13,10 @@ async function run() {
 
     const staging_branch = core.getInput('staging_branch')
     const production_branch = core.getInput('production_branch')
-    const body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
+    const body_config_str = core.getInput('pr_body_config') || '{}'
+    console.log(body_config_str)
+    const body_config = JSON.parse(body_config_str)
+    console.table(body_config)
 
     var table_fields = body_config.table_fields || []
 
