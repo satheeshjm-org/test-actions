@@ -12,7 +12,9 @@ async function run() {
 
     var staging_branch = core.getInput('staging_branch')
     var production_branch = core.getInput('production_branch')
-    var body_config = JSON.parse(core.getInput('pr_body') || '{}')
+    var body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
+
+    console.table(body_config)
 
     var table_fields = body_config.table_fields || []
 
@@ -53,6 +55,7 @@ async function run() {
     for (var i=0;i<table_fields.length;i++) {
       var table_field = table_fields[i]
 
+      console.table(table_field)
       var name = table_field.name
       titles.push(name)
 
