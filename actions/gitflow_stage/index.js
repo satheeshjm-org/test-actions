@@ -85,11 +85,11 @@ async function run() {
 
         if (diff_file_extensions.has(extension_to_match)) {
           console.debug(`extension ${extension_to_match} found in PR diff`)
-          current_pr_entry.push("yes")
+          current_pr_entry.push(`<ul><li>- [x]</li></ul>`)
         }
         else {
           console.debug(`extension ${extension_to_match} not found in PR diff`)
-          current_pr_entry.push("no")
+          current_pr_entry.push(`<ul><li>- [ ]</li></ul>`)
         }
       }
     }
