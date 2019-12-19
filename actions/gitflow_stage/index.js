@@ -14,6 +14,7 @@ async function run() {
     var production_branch = core.getInput('production_branch')
     var body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
 
+    console.table(core.getInput('pr_body_config'))
     console.table(body_config)
 
     var table_fields = body_config.table_fields || []
