@@ -77,8 +77,8 @@ async function run() {
           headers: {accept: "application/vnd.github.v3.diff"}
         });
 
-
-        console.table(prget_resp.data)
+        console.table(prget_resp)
+        console.log(prget_resp.data)
         var diffs = parse_diff(prget_resp.data)
         var diff_files = diffs.map(d => d.to)
         console.log(diff_files)
