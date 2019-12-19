@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const parse_diff = require('parse-diff');
+const minimatch = require("minimatch")
 
 async function run() {
 
@@ -10,9 +11,9 @@ async function run() {
     const context = github.context
     const github_cli = new github.GitHub(process.env.GITHUB_TOKEN)
 
-    var staging_branch = core.getInput('staging_branch')
-    var production_branch = core.getInput('production_branch')
-    var body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
+    const staging_branch = core.getInput('staging_branch')
+    const production_branch = core.getInput('production_branch')
+    const body_config = JSON.parse(core.getInput('pr_body_config') || '{}')
 
     var table_fields = body_config.table_fields || []
 
@@ -63,11 +64,11 @@ async function run() {
         current_pr_entry.push(`${payload_pr.title}(#${payload_pr.number})`)
       }
       else if (value == "owner") {
-        current_pr_entry.push(payload_pr.user.login)
+        current_pr_entry.push(`@${payload_pr.user.login}`)
       }
-      else if (value == "file_extension_bool") {
-        var extension_to_match = table_field.extension
-
+      else if (value == "does_file_exist") {
+        var glob_to_match = table_field.glob
+        console.debug(`Glob to match : ${glob_to_match}`)
 
         //get diff
         var prget_resp = await github_cli.pullRequests.get({
@@ -79,16 +80,25 @@ async function run() {
 
         var diffs = parse_diff(prget_resp.data)
         var diff_files = diffs.map(d => d.to)
-        var diff_file_extensions = new Set(diff_files.map(f => f.split('.').pop()))
 
-        console.log(`File Extensions found in PR ${diff_file_extensions}`)
+        console.log(`Files found in PR ${diff_files}`)
 
-        if (diff_file_extensions.has(extension_to_match)) {
-          console.debug(`extension ${extension_to_match} found in PR diff`)
+
+        var glob_match = null
+        for(var j=0; j< diff_files.length; j++) {
+          const f = diff_files[j]
+          if(minimatch(f, glob_to_match)) {
+            glob_match = f
+            break
+          }
+        }
+
+        if (glob_match) {
+          console.debug(`matching file ${glob_match} found for glob ${glob_to_match} found in PR diff`)
           current_pr_entry.push(`<ul><li>- [x] </li></ul>`)
         }
         else {
-          console.debug(`extension ${extension_to_match} not found in PR diff`)
+          console.debug(`no matching file found in PR diff for glob ${glob_to_match}`)
           current_pr_entry.push(`<ul><li>- [ ] </li></ul>`)
         }
       }
