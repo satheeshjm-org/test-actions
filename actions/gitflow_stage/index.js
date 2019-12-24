@@ -4,7 +4,7 @@ const parse_diff = require('parse-diff');
 const minimatch = require("minimatch")
 
 
-async function construct_pr_body(github_cli, staging_branch, production_branch, body_config) {
+async function construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config) {
 
   var table_fields = body_config.table_fields || []
 
@@ -125,7 +125,7 @@ async function run() {
     var head = staging_branch
     var log_prefix = `${head}->${base}`
 
-    var pr_body = construct_pr_body(github_cli, staging_branch, production_branch, body_config)
+    var pr_body = construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config)
 
     try {
 
