@@ -103,7 +103,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         }
 
         if (glob_matched_files.length > 0) {
-          console.debug(`matching file ${glob_match} found for glob ${glob_to_match} found in PR diff`)
+          console.debug(`${glob_matched_files.length} matching files found for glob ${glob_to_match} found in PR diff`)
           var field_val = `<ul><li>- [x] </li></ul>\n${glob_matched_files.join('\n')}`
           table_row.push(field_val)
         }
