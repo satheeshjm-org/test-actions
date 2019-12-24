@@ -71,16 +71,17 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         var captured_group = table_field.captured_group
         console.debug(`Pattern to match : ${pattern_to_match}`)
 
-        var pattern_matches = []
+        var pattern_matches = new Set([])
         for(var k=0; k<patches.length; k++) {
           const patch = patches[k]
-          const match = patch.match(pattern_to_match)
+          const match = patch.match(new RegExp(pattern_to_match, "g"))
           if (match) {
-              pattern_matches.push(match[captured_group])
+              match.forEach(m => pattern_matches.add(m))
           }
         }
+        pattern_matches = Array.from(pattern_matches)
 
-        if (pattern_matches.length > 1) {
+        if (pattern_matches.length > 0) {
           console.debug(`matching pattern found for pattern ${pattern_to_match} in PR diff`)
           table_row.push(`<ul><li>- [x] </li></ul>${pattern_matches.join('<br>')}`)
         }
