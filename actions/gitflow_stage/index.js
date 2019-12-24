@@ -42,7 +42,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     const author = commit.author.login
     const message = commit.commit.message
 
-    console.debug(`fetching commit for ${commit.sha}`)
+    console.debug(`fetching commit ${i} for ${commit.sha}`)
 
     var commitresp = await github_cli.repos.getCommit({
       owner: repo.owner,
@@ -60,7 +60,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
       var value = table_field.value
       if (value == "pr") {
-        table_row.push(`${message})`)
+        table_row.push(`${message}`)
       }
       else if (value == "owner") {
         table_row.push(`@${author}`)
