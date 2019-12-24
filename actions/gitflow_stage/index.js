@@ -97,6 +97,9 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   table_rows.forEach(tr => {
     pr_body = `${pr_body}| ${tr.join(" | ")} |\n`
   })
+
+  console.debug(pr_body)
+  return pr_body
 }
 
 
