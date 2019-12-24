@@ -128,7 +128,7 @@ async function run() {
     var head = staging_branch
     var log_prefix = `${head}->${base}`
 
-    var pr_body = construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config)
+    var pr_body = await construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config)
 
     try {
 
