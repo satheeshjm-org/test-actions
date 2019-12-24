@@ -15,8 +15,8 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   //table rows
   var table_rows = []
 
-  for (var j=0;j<table_fields.length;j++) {
-    titles.push(table_fields[j].name)
+  for (var i=0;i<table_fields.length;i++) {
+    titles.push(table_fields[i].name)
     horizontal_linesegments.push("---")
   }
 
@@ -29,16 +29,20 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   })
 
   const commits = comparecommits_resp.data.commits
-  for (var j=0; j<commits.length; j++) {
+  console.debug(`diff has ${commits.length}`)
+
+  for (var i=0; i<commits.length; i++) {
 
     var table_row = []
     table_rows.push(table_row)
 
 
     //calculate filenames changed in commit
-    const commit = commits[j]
+    const commit = commits[i]
     const author = commit.author.login
     const message = commit.commit.message
+
+    console.debug(`fetching commit for ${commit.sha}`)
 
     var commitresp = await github_cli.repos.getCommit({
       owner: repo.owner,
