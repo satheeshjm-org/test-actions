@@ -68,19 +68,21 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
+        var captured_group = table_field.captured_group
         console.debug(`Pattern to match : ${pattern_to_match}`)
 
-        var pattern_match = false
+        var pattern_matches = []
         for(var k=0; k<patches.length; k++) {
           const patch = patches[k]
-          if (patch.match(pattern_to_match)) {
-              pattern_match = true
+          const match = patch.match(pattern_to_match)
+          if (match) {
+              pattern_matches.push(match[captured_group])
           }
         }
 
-        if (pattern_match) {
+        if (pattern_matches.length > 1) {
           console.debug(`matching pattern found for pattern ${pattern_to_match} in PR diff`)
-          table_row.push(`<ul><li>- [x] </li></ul>`)
+          table_row.push(`<ul><li>- [x] </li></ul>${pattern_matches.join('<br>')}`)
         }
         else {
           console.debug(`no matching pattern found in PR diff for pattern ${pattern_to_match}`)
