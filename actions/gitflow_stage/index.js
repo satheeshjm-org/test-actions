@@ -43,7 +43,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     var commitresp = await github_cli.repos.getCommit({
       owner: repo.owner,
       repo: repo.repo,
-      ref: resp.data.commits[0].sha
+      ref: commit.sha
     })
 
     var files = commitresp.data.files
