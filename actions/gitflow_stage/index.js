@@ -52,6 +52,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
     var files = commitresp.data.files
     var filenames_changed = files.map(f => f.filename)
+    var patches = files.map(f => f.patch)
 
 
     for (var j=0;j<table_fields.length;j++) {
@@ -65,10 +66,31 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
+      else if (value == "does_file_contain") {
+        var pattern_to_match = table_field.pattern
+        console.debug(`Pattern to match : ${pattern_to_match}`)
+
+        var pattern_match = true
+        for(var k=0; k<patches.length; k++) {
+          const patch = patches[k]
+          if (patch.match(pattern_to_match)) {
+              pattern_match = true
+          }
+        }
+
+        if (pattern_match) {
+          console.debug(`matching pattern found for pattern ${pattern_to_match} in PR diff`)
+          table_row.push(`<ul><li>- [x] </li></ul>`)
+        }
+        else {
+          console.debug(`no matching pattern found in PR diff for pattern ${pattern_to_match}`)
+          table_row.push(`<ul><li>- [ ] </li></ul>`)
+        }
+
+      }
       else if (value == "does_file_exist") {
         var glob_to_match = table_field.glob
         console.debug(`Glob to match : ${glob_to_match}`)
-
 
         console.log(`${filenames_changed.length} Files found in PR : ${filenames_changed}`)
 
