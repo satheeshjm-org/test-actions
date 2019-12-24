@@ -70,7 +70,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         var pattern_to_match = table_field.pattern
         console.debug(`Pattern to match : ${pattern_to_match}`)
 
-        var pattern_match = true
+        var pattern_match = false
         for(var k=0; k<patches.length; k++) {
           const patch = patches[k]
           if (patch.match(pattern_to_match)) {
@@ -94,18 +94,18 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
         console.log(`${filenames_changed.length} Files found in PR : ${filenames_changed}`)
 
-        var glob_match = null
+        var glob_matched_files = []
         for(var k=0; k< filenames_changed.length; k++) {
           const f = filenames_changed[k]
           if(minimatch(f, glob_to_match)) {
-            glob_match = f
-            break
+            glob_matched_files.push(f)
           }
         }
 
-        if (glob_match) {
+        if (glob_matched_files.length > 0) {
           console.debug(`matching file ${glob_match} found for glob ${glob_to_match} found in PR diff`)
-          table_row.push(`<ul><li>- [x] </li></ul>`)
+          var field_val = `<ul><li>- [x] </li></ul>\n${glob_matched_files.join('\n')}`
+          table_row.push(field_val)
         }
         else {
           console.debug(`no matching file found in PR diff for glob ${glob_to_match}`)
