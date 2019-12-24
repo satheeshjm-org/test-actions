@@ -168,8 +168,10 @@ async function run() {
         console.info(`${log_prefix} ${prs.length} pull requests found. ${existing_pr.number}`)
 
         var existing_pr_body = existing_pr.body
-        existing_pr_body.replace(`|.*|`,"")
-        pr_body = `${existing_pr.body}\n${pr_body}\n`
+        //remove existing table
+        existing_pr_body = existing_pr_body.replace(new RegExp(`\\|.*\\|[\\r\\n]+`,"g"),"")
+
+        pr_body = `${pr_body}\n${existing_pr_body}\n`
 
         var prupdate_resp = await github_cli.pulls.update({
           owner: repo.owner,
