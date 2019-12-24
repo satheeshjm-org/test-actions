@@ -31,7 +31,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   const commits = comparecommits_resp.data.commits
   for (var j=0; j<commits.length; j++) {
 
-    var table_row = {}
+    var table_row = []
     table_rows.push(table_row)
 
 
