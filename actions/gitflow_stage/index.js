@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const parse_diff = require('parse-diff');
 const minimatch = require("minimatch")
 
 
