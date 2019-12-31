@@ -2,6 +2,7 @@
   "dependencies": {
     "@actions/core": "1.2.0",
     "@actions/github": "2.0.0",
-    "minimatch": "3.0.4"
+    "minimatch": "3.0.4",
+    "markdown-table": "1.1.3"
   }
 }

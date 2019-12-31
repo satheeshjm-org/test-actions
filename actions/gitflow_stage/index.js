@@ -1,22 +1,19 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const minimatch = require("minimatch")
+var md_table = require('markdown-table')
 
 
 async function construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config) {
 
   var table_fields = body_config.table_fields || []
 
-  //table title
-  var titles = []
-  //line separating title and contents
-  var horizontal_linesegments = []
-  //table rows
   var table_rows = []
 
+  var title_row = []
+  table_rows.push(title_row)
   for (var i=0;i<table_fields.length;i++) {
-    titles.push(table_fields[i].name)
-    horizontal_linesegments.push("---")
+    title_row.push(table_fields[i].name)
   }
 
   //find diff commits
@@ -60,25 +57,45 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
       var value = table_field.value
       if (value == "pr") {
-        table_row.push(`${message}`)
+        const message_title = message.split('\n')[0]
+        table_row.push(`${message_title}`)
       }
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
-        var captured_group = table_field.captured_group
         console.debug(`Pattern to match : ${pattern_to_match}`)
+        const regex_a = new RegExp('\\+.*('+pattern_to_match+')', "g");
+        const regex_r = new RegExp('\\-.*('+pattern_to_match+')', "g");
 
         var pattern_matches = new Set([])
+
+        const added = new Set([])
+        const removed = new Set([])
+
         for(var k=0; k<patches.length; k++) {
           const patch = patches[k]
-          const match = patch.match(new RegExp(pattern_to_match, "g"))
-          if (match) {
-              match.forEach(m => pattern_matches.add(m))
+          if(!patch) {
+            continue;
           }
+
+          var match_a = regex_a.exec(patch)
+          while(match_a) {
+            added.add(match_a[match_a.length-1])
+            match_a = regex_a.exec(patch)
+          }
+
+          var match_r = regex_r.exec(patch)
+          while(match_r) {
+            removed.add(match_r[match_r.length-1])
+            match_r = regex_r.exec(patch)
+         }
         }
-        pattern_matches = Array.from(pattern_matches)
+
+        //removing matches in '-'  lines from patch
+        //doing this because if a match has been moved to some place , we don't want it to be showing up in our match
+        pattern_matches = Array.from(added).filter(a => !removed.has(a))
 
         if (pattern_matches.length > 0) {
           console.debug(`matching pattern found for pattern ${pattern_to_match} in PR diff`)
@@ -120,11 +137,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
 
 
-  var pr_body = `| ${titles.join(" | ")} |\n`
-  pr_body = `${pr_body}| ${horizontal_linesegments.join(" | ")} |\n`
-  table_rows.forEach(tr => {
-    pr_body = `${pr_body}| ${tr.join(" | ")} |\n`
-  })
+  var pr_body = md_table(table_rows)
 
   console.debug(pr_body)
   return pr_body
