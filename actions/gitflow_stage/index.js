@@ -63,6 +63,17 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
+      else if (value == "title_regex") {
+        const sha = core.getInput('sha');
+        const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            commit_sha: sha || github.context.sha,
+        });
+      
+        const pr = result.data.length > 0 && result.data[0];
+        table_row.push(`${ pr && pr.title || ''}`)
+      }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
         console.debug(`Pattern to match : ${pattern_to_match}`)
