@@ -72,7 +72,8 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         });
       
         const pr = result.data.length > 0 && result.data[0];
-        table_row.push(`${ pr && pr.title || ''}`)
+        table_row.push(`:bug: Bugs :sparkles: Feature :zap: Improvements :ambulance: hot-fix`);
+
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
