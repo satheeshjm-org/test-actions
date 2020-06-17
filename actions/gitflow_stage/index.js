@@ -63,7 +63,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
-      else if (value == "title_regex") {
+      else if (value == "type") {
         const sha = core.getInput('sha');
         const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
             owner: github.context.repo.owner,
@@ -72,8 +72,11 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         });
       
         const pr = result.data.length > 0 && result.data[0];
-        table_row.push(`:bug: <b>Bugs</b> :sparkles: Feature :zap: Improvements :ambulance: hot-fix`);
-
+        table_row.push(`${ pr && pr.body || ''}`)
+        debugger;
+        console.log(pr.body);
+        // "[buqg] [FC-1234] : qweqweqwe qwqwe qew".split(" ")[0].replace("[","").replace("]","")
+        // table_row.push(`:bug: <b>Bugs</b> :sparkles: Feature :zap: Improvements :ambulance: hot-fix`);
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
