@@ -94,7 +94,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
           test: { tag: "test case",icon:':rotating_light:',versionType: "minor" },
         }
         // if(typeObj[pr_type]){
-          table_row.push(`pr_type - ${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b> - ${title} `);
+          table_row.push(`pr_type - ${pr_type} - ${title} `);
         // }else {
         //   table_row.push(`-`);
         // }
