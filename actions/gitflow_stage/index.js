@@ -50,6 +50,11 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     var filenames_changed = files.map(f => f.filename)
     var patches = files.map(f => f.patch)
 
+    const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
+        owner: repo.owner,
+        repo: repo.repo,
+        commit_sha: commit.sha,
+    });
 
     for (var j=0;j<table_fields.length;j++) {
       var table_field = table_fields[j]
@@ -64,12 +69,6 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         table_row.push(`@${author}`)
       }
       else if (value == "type") {
-        const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
-            owner: repo.owner,
-            repo: repo.repo,
-            commit_sha: commit.sha,
-        });
-      
         const pr = result.data.length > 0 && result.data[0];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
