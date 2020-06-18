@@ -93,7 +93,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         if(typeObj[pr_type]){
           table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
         }else {
-          table_row.push(`${result.data.length} ${pr_title} ${result.data[0].title} ${JSON.stringify(result.data)}`);
+          table_row.push(`${pr_title}`);
         }
       }
       else if (value == "does_file_contain") {
