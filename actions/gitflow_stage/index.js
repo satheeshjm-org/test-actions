@@ -58,8 +58,6 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       if (value == "pr") {
         const message_title = message.split('\n')[0]
         table_row.push(`${message_title}`)
-        console.log("MESSAGE------");
-        console.log(message);
       }
       else if (value == "owner") {
         table_row.push(`@${author}`)
@@ -72,8 +70,16 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
             repo: repo.repo,
             commit_sha: commit.sha,
         });
+        
         const pr = result.data.length > 0 && result.data[result.data.length-1];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
+        const number = await github_cli.pulls.get({
+          owner: repo.owner,
+          repo: repo.repo,
+          pull_number: pr.number
+        });
+        console.log("number-----"+pr.number);
+        console.log(number);
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
         let typeObj =  {
           bug: { tag: "Bug fixes", icon:':bug:', versionType: "minor" },
