@@ -73,7 +73,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       
         const pr = result.data.length > 0 && result.data[0];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
-        const pr_type = pr_title && pr_title.split(" ")[0].replace("[","").replace("]","").toLowerCase();
+        const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
         let typeObj =  {
           bug: { tag: "Bug fixes", icon:':bug:', versionType: "minor" },
           feat: { tag: "Feature", icon:':sparkles:', versionType: "minor" },
@@ -93,11 +93,11 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
           docs: { tag: "document work",icon:':books:', versionType: "minor" },
           test: { tag: "test case",icon:':rotating_light:',versionType: "minor" },
         }
-        // if(typeObj[pr_type]){
-          table_row.push(`pr_type - ${pr_type} - ${pr_title} `);
-        // }else {
-        //   table_row.push(`-`);
-        // }
+        if(typeObj[pr_type]){
+          table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
+        }else {
+          table_row.push(`-`);
+        }
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
