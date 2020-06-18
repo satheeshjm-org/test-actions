@@ -72,8 +72,8 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         });
       
         const pr = result.data.length > 0 && result.data[0];
-        const title = pr && pr.title || '';
-        const pr_type = title.split(" ")[0].replace("[","").replace("]","");
+        const title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
+        const pr_type = title.split(" ")[0].replace("[","").replace("]","").toLowerCase();
         let typeObj =  {
           bug: { tag: "Bug fixes", icon:':bug:', versionType: "minor" },
           feat: { tag: "Feature", icon:':sparkles:', versionType: "minor" },
