@@ -71,7 +71,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
             commit_sha: sha || commit.sha,
         });
       
-        const pr = result.data.length > 0 && result.data[0];
+        const pr = result.data.length > 0 && result.data[i];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
         let typeObj =  {
