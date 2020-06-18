@@ -50,12 +50,6 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     var filenames_changed = files.map(f => f.filename)
     var patches = files.map(f => f.patch)
 
-    const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
-        owner: repo.owner,
-        repo: repo.repo,
-        commit_sha: commit.sha,
-    });
-
     for (var j=0;j<table_fields.length;j++) {
       var table_field = table_fields[j]
 
@@ -69,6 +63,11 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         table_row.push(`@${author}`)
       }
       else if (value == "type") {
+        const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
+            owner: repo.owner,
+            repo: repo.repo,
+            commit_sha: commit.sha,
+        });
         const pr = result.data.length > 0 && result.data[0];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
@@ -94,7 +93,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         if(typeObj[pr_type]){
           table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
         }else {
-          table_row.push(`${result.data.length} ${pr_title} ${result.data[0].title}`);
+          table_row.push(`${result.data.length} ${pr_title} ${result.data[0].title} ${JSON.stringify(result.data)}`);
         }
       }
       else if (value == "does_file_contain") {
