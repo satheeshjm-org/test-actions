@@ -66,9 +66,9 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "type") {
         const sha = core.getInput('sha');
         const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            commit_sha: sha || github.context.sha,
+            owner: repo.owner,
+            repo: repo.repo,
+            commit_sha: sha || commit.sha,
         });
       
         const pr = result.data.length > 0 && result.data[0];
@@ -93,8 +93,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
           docs: { tag: "document work",icon:':books:', versionType: "minor" },
           test: { tag: "test case",icon:':rotating_light:',versionType: "minor" },
         }
-        // table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
-        table_row.push(`:bug:`);
+        table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
