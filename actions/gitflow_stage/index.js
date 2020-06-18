@@ -63,11 +63,14 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         table_row.push(`@${author}`)
       }
       else if (value == "type") {
+        var pattern_to_match = table_field.pattern
+        // const regex_a = new RegExp('\\+.*('+pattern_to_match+')', "g");
         const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
             owner: repo.owner,
             repo: repo.repo,
             commit_sha: commit.sha,
         });
+        console.log(result);
         const pr = result.data.length > 0 && result.data[0];
         const pr_title = pr && pr.title || '';// eg: [FEAT][FC-1234]: New Feature
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
