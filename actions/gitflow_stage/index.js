@@ -93,12 +93,11 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
           docs: { tag: "document work",icon:':books:', versionType: "minor" },
           test: { tag: "test case",icon:':rotating_light:',versionType: "minor" },
         }
-        if(typeObj[pr_type]){
-          table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
-        }else {
-          table_row.push(`-`);
-        }
-        
+        // if(typeObj[pr_type]){
+          table_row.push(`pr_type - ${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b> - ${title} `);
+        // }else {
+        //   table_row.push(`-`);
+        // }
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
