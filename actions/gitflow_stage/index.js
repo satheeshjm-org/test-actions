@@ -72,11 +72,28 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         });
       
         const pr = result.data.length > 0 && result.data[0];
-        table_row.push(`${ pr && pr.body || ''}`)
-        debugger;
-        console.log(pr.body);
-        // "[buqg] [FC-1234] : qweqweqwe qwqwe qew".split(" ")[0].replace("[","").replace("]","")
-        // table_row.push(`:bug: <b>Bugs</b> :sparkles: Feature :zap: Improvements :ambulance: hot-fix`);
+        const title = pr && pr.title || '';
+        const pr_type = title.split(" ")[0].replace("[","").replace("]","");
+        let typeObj =  {
+          bug: { tag: "Bug fixes", icon:':bug:', versionType: "minor" },
+          feat: { tag: "Feature", icon:':sparkles:', versionType: "minor" },
+          improvements: { tag: "Enhancements",icon:':zap:', versionType: "minor" },
+          hotfix: { tag: "hot-fix", icon:':ambulance:',versionType: "minor" },
+          refactor: { tag: "Code refactor",icon:':hammer:', versionType: "minor" },
+          perf: { tag: "Performance",icon:':racehorse:', versionType: "minor" },
+          build: { tag: "changes only affect build system",icon:':construction_worker:', versionType: "minor" },
+          chore: {
+              tag: "other changes don't modify src or test files",
+              icon:':zap:',
+              versionType: "minor",
+          },
+          revert: { tag: "Code revert",icon:':rewind:', versionType: "minor" },
+          major: { tag: "Major release",icon:':boom:', versionType: "minor" },
+          other: { tag: "others",icon:':ok_hand:', versionType: "minor" },
+          docs: { tag: "document work",icon:':books:', versionType: "minor" },
+          test: { tag: "test case",icon:':rotating_light:',versionType: "minor" },
+        }
+        table_row.push(`${typeObj[pr_type].icon} <b>${typeObj[pr_type].tag}</b>`);
       }
       else if (value == "does_file_contain") {
         var pattern_to_match = table_field.pattern
