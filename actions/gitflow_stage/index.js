@@ -71,7 +71,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       }
       else if (value == "title") {
         if(title){
-          table_row.push(`${title} (#${number})`);
+          table_row.push(`${message_title}`);
         }else {
           table_row.push(`-`);
         }
