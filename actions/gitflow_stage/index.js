@@ -69,14 +69,6 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
-      else if (value == "title") {
-        if(title){
-          const message_title = message.split('\n')[0]
-          table_row.push(`${message_title}`);
-        }else {
-          table_row.push(`-`);
-        }
-      }
       else if (value == "type") {
         var pattern_to_match = table_field.patterns;
         var regex_patters = Object.keys(pattern_to_match);
