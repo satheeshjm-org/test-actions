@@ -50,29 +50,22 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     var filenames_changed = files.map(f => f.filename)
     var patches = files.map(f => f.patch)
 
-    const number = message.split("\n")[0].split("#")[1].replace(")","");
-    const prTitle = await github_cli.pulls.get({
-      owner: repo.owner,
-      repo: repo.repo,
-      pull_number: number
-    });
-    const {title} = prTitle.data;
     for (var j=0;j<table_fields.length;j++) {
       var table_field = table_fields[j]
 
 
       var value = table_field.value
+      var message_title = message.split('\n')[0]
       if (value == "pr") {
-        const message_title = message.split('\n')[0]
         table_row.push(`${message_title}`)
       }
       else if (value == "owner") {
         table_row.push(`@${author}`)
       }
-      else if (value == "type") {
+      else if (value == "commit_title_regex") {
         var pattern_to_match = table_field.patterns;
         var regex_patters = Object.keys(pattern_to_match);
-        var validRegex = regex_patters.filter((regex) => new RegExp(regex,"gi").exec(title));
+        var validRegex = regex_patters.filter((regex) => new RegExp(regex,"gi").exec(message_title));
         if(validRegex.length && pattern_to_match[validRegex[0]]){
           table_row.push(`<b>${pattern_to_match[validRegex]}</b>`);
         }else {
