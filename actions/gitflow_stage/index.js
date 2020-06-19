@@ -49,7 +49,8 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     var files = commitresp.data.files
     var filenames_changed = files.map(f => f.filename)
     var patches = files.map(f => f.patch)
-
+    console.log("commitresp-----")
+    console.log(commitresp);
     for (var j=0;j<table_fields.length;j++) {
       var table_field = table_fields[j]
 
@@ -64,7 +65,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       }
       else if (value == "type") {
         var pattern_to_match = table_field.pattern
-        // const regex_a = new RegExp('\\+.*('+pattern_to_match+')', "g");
+       // const regex_a = new RegExp('\\+.*('+pattern_to_match+')', "g");
         const result = await github_cli.repos.listPullRequestsAssociatedWithCommit({
             owner: repo.owner,
             repo: repo.repo,
@@ -78,8 +79,9 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
           repo: repo.repo,
           pull_number: pr.number
         });
-        console.log("number-----"+pr.number);
-        console.log(number);
+        // console.log("number-----"+pr.number);
+        // console.log(number);
+        console.log(message_title.split("#"))
         const pr_type = pr_title && pr_title.split("]")[0].replace("[","").toLowerCase();
         let typeObj =  {
           bug: { tag: "Bug fixes", icon:':bug:', versionType: "minor" },
