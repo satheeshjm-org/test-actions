@@ -71,6 +71,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       }
       else if (value == "title") {
         if(title){
+          const message_title = message.split('\n')[0]
           table_row.push(`${message_title}`);
         }else {
           table_row.push(`-`);
