@@ -79,10 +79,10 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
       else if (value == "type") {
         var pattern_to_match = table_field.patterns;
         var regex_patters = Object.keys(pattern_to_match);
-        var validRegex = regex_patters.filter((regex) => new RegExp('^\\['+regex+'\\].*$',"gi").exec(title));
+        var validRegex = regex_patters.filter((regex) => new RegExp(regex,"gi").exec(title));
         console.log('validRegex-----'+validRegex);
         console.log(regex_patters)
-        if(pattern_to_match[validRegex]){
+        if(validRegex.length && pattern_to_match[validRegex[0]]){
           table_row.push(`<b>${pattern_to_match[validRegex]}</b>`);
         }else {
           table_row.push(`-`);
