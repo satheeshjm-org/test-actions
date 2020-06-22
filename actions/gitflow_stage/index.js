@@ -67,7 +67,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
         var regex_patters = Object.keys(pattern_to_match);
         var validRegex = regex_patters.filter((regex) => new RegExp(regex,"gi").exec(message_title));
         if(validRegex.length && pattern_to_match[validRegex[0]]){
-          table_row.push(`asdasdasdd <b>${pattern_to_match[validRegex]}</b>`);
+          table_row.push(`<b>${pattern_to_match[validRegex[0]]}</b>`);
         }else {
           table_row.push(`-`);
         }
