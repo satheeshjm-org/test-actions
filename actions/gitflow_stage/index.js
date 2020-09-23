@@ -156,14 +156,14 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
 
 
-  var pr_body = md_table(table_rows.concat(metrics_table_rows));
+  var pr_body = md_table(table_rows);
 
   var metrics_pr_body = md_table(metrics_table_rows);
 
   console.debug("table-pr_body--------",pr_body)
   console.debug("table-metrics_pr_body---------",metrics_pr_body)
   console.log("pr_body------", typeof pr_body)
-  return pr_body
+  return pr_body + "<br/>" + metrics_pr_body;
 }
 
 
