@@ -6,7 +6,9 @@ var md_table = require('markdown-table')
 
 async function construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config) {
 
-  var table_fields = body_config.table_fields || []
+  var table_fields = body_config.table_fields || [];
+
+  var metrics = body_config.metrics || []
 
   var table_rows = []
 
@@ -14,6 +16,13 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   table_rows.push(title_row)
   for (var i=0;i<table_fields.length;i++) {
     title_row.push(table_fields[i].name)
+  }
+
+  var metrics_table_rows = []
+
+  var metrics_title_row = []
+  for (var i=0;i<metrics.length;i++) {
+    metrics_title_row.push(metrics[i].name)
   }
 
   //find diff commits
