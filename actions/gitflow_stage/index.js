@@ -155,9 +155,12 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
 
 
-  var pr_body = md_table(table_rows)
+  var pr_body = md_table(table_rows.concat(metrics_table_rows));
 
-  console.debug(pr_body)
+  var metrics_pr_body = md_table(metrics_table_rows);
+
+  console.debug("table-pr_body--------",pr_body)
+  console.debug("table-metrics_pr_body---------",metrics_pr_body)
   return pr_body
 }
 
@@ -188,6 +191,8 @@ async function run() {
     var log_prefix = `${head}->${base}`
 
     var pr_body = await construct_pr_body(github_cli, repo, staging_branch, production_branch, body_config)
+
+    console.log("pr_body------", typeof pr_body)
 
     try {
 
