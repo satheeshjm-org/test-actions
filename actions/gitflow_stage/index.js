@@ -21,6 +21,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
   var metrics_table_rows = []
 
   var metrics_title_row = []
+  metrics_table_rows.push(metrics_title_row)
   for (var i=0;i<metrics.length;i++) {
     metrics_title_row.push(metrics[i].name)
   }
