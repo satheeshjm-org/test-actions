@@ -162,6 +162,7 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
   console.debug("table-pr_body--------",pr_body)
   console.debug("table-metrics_pr_body---------",metrics_pr_body)
+  console.log("pr_body------", typeof pr_body)
   return pr_body
 }
 
