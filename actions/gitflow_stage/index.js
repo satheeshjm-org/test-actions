@@ -18,13 +18,13 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
     title_row.push(table_fields[i].name)
   }
 
-  var metrics_table_rows = []
+  var metrics_table_rows = '<table><thead><tr>';
 
-  var metrics_title_row = []
   metrics_table_rows.push(metrics_title_row)
   for (var i=0;i<metrics.length;i++) {
-    metrics_title_row.push(metrics[i].name)
+    metrics_table_rows +='<th>'+metrics[i].name+'</th>';
   }
+  metrics_table_rows +='</tr></thead>';
 
   //find diff commits
   const comparecommits_resp = await github_cli.repos.compareCommits({
@@ -158,12 +158,9 @@ async function construct_pr_body(github_cli, repo, staging_branch, production_br
 
   var pr_body = md_table(table_rows);
 
-  var metrics_pr_body = md_table(metrics_table_rows);
-
-  console.debug("table-pr_body--------",pr_body)
-  console.debug("table-metrics_pr_body---------",metrics_pr_body)
-  console.log("pr_body------", typeof pr_body)
-  return pr_body + "<br/>" + metrics_pr_body;
+//var metrics_pr_body = md_table(metrics_table_rows);
+  metrics_table_rows +='<tbody></tbody></table>';
+  return pr_body + '<br><br><br>' + metrics_table_rows;
 }
 
 
